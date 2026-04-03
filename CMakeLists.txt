@@ -9,8 +9,30 @@ project(app C)
 
 # App source files — add your .c files here
 set(APP_SOURCES
-    main/main.c
     main/crt0.c
+    main/main.c
+    main/game_cheats.c
+    main/game_combat.c
+    main/game_compute.c
+    main/game_economics.c
+    main/game_endgame.c
+    main/game_format.c
+    main/game_investment.c
+    main/game_post_human.c
+    main/game_prng.c
+    main/game_projects.c
+    main/game_save.c
+    main/game_space.c
+    main/game_state.c
+    main/game_tick.c
+    main/game_tournament.c
+    main/icons.c
+    main/rendertext.c
+    main/ui_core.c
+    main/ui_render.c
+    main/game_nbt.c
+    main/game_save_nbt.c
+    main/build_date.c
 )
 
 # Include directories — add paths to your headers here
@@ -39,6 +61,15 @@ target_compile_options(app_obj PRIVATE
     "SHELL:-include freertos/queue.h"
     "SHELL:-include freertos/event_groups.h"
 )
+
+# Generate ISO build date and force recompile every build
+string(TIMESTAMP BUILD_DATE_ISO "%Y-%m-%d")
+add_custom_target(touch_build_date ALL
+    COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_SOURCE_DIR}/main/build_date.c
+    COMMENT "Updating build date"
+)
+add_dependencies(app_obj touch_build_date)
+target_compile_definitions(app_obj PRIVATE BUILD_DATE_STR="${BUILD_DATE_ISO}")
 
 # Collect object files into a list file, then link via a response file
 # This avoids issues with generator expressions in custom commands

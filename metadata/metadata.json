@@ -1,7 +1,7 @@
 {
-  "name": "Grace Template",
-  "description": "Template app using Graceloader",
-  "categories": ["tools"],
+  "name": "Universal Paperclips_grace",
+  "description": "Universal Paperclips - Tanmatsu Edition",
+  "categories": ["games"],
   "version": "0.0.1",
   "icon": {
     "16x16": "icon16.png",
@@ -18,7 +18,8 @@
       "interpreter": "at.cavac.graceloader",
       "executable": "app.so",
       "assets": [
-        {"source_file": "app.so", "target_file": "app.so"}
+        {"source_file": "app.so", "target_file": "app.so"},
+        {"source_file": "up_title.png", "target_file": "up_title.png"}
       ]
     }
   ]

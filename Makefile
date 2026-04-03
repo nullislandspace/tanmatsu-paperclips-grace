@@ -4,7 +4,7 @@ BADGELINKPORT ?= $(PORT)
 SHELL := /usr/bin/env bash
 
 # App installation settings
-APP_SLUG_NAME ?= tld.username.gracetemplate
+APP_SLUG_NAME ?= at.cavac.paperclips-grace
 APP_INSTALL_BASE_PATH ?= /int/apps/
 APP_INSTALL_PATH = $(APP_INSTALL_BASE_PATH)$(APP_SLUG_NAME)
 
@@ -59,6 +59,8 @@ install: build
 	cd badgelink/tools; ./badgelink.sh $(BADGELINK_CONN) fs upload $(APP_INSTALL_PATH)/icon64.png ../../metadata/icon64.png
 	@echo "Uploading app.so..."
 	cd badgelink/tools; ./badgelink.sh $(BADGELINK_CONN) fs upload $(APP_INSTALL_PATH)/app.so ../../$(BUILD)/app.so
+	@echo "Uploading up_title.png..."
+	cd badgelink/tools; ./badgelink.sh $(BADGELINK_CONN) fs upload $(APP_INSTALL_PATH)/up_title.png ../../metadata/up_title.png
 	@echo "=== Installation complete ==="
 
 GRACELOADER_SLUG ?= at.cavac.graceloader
@@ -78,6 +80,7 @@ apprepo: build
 	cp metadata/icon32.png $(APP_REPO_PATH)/icon32.png
 	cp metadata/icon64.png $(APP_REPO_PATH)/icon64.png
 	cp $(BUILD)/app.so $(APP_REPO_PATH)/app.so
+	cp metadata/up_title.png $(APP_REPO_PATH)/up_title.png
 	@echo "=== App repository updated at $(APP_REPO_PATH) ==="
 
 # Preparation
@@ -120,6 +123,15 @@ verify: build
 	else \
 	  echo "All symbols satisfied."; \
 	fi
+
+# Tools
+
+.PHONY: tools
+tools:
+	@echo "=== Tools ==="
+	@echo "Save tool: perl tools/savetool.pl decompile <save.bin> [output.txt]"
+	@echo "           perl tools/savetool.pl compile <input.txt> <save.bin>"
+	@perl -c tools/savetool.pl 2>&1 && echo "Syntax OK" || echo "Syntax errors found"
 
 # Cleaning
 
