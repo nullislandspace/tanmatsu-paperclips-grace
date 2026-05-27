@@ -7,6 +7,7 @@
 #include "bsp/input.h"
 #include "bsp/led.h"
 #include "bsp/power.h"
+#include "gl_input.h"
 #include "driver/gpio.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_types.h"
@@ -41,8 +42,8 @@ static char const TAG[] = "main";
 // Display globals
 static size_t                       display_h_res        = 0;
 static size_t                       display_v_res        = 0;
-static lcd_color_rgb_pixel_format_t display_color_format = LCD_COLOR_PIXEL_FORMAT_RGB565;
-static lcd_rgb_data_endian_t        display_data_endian  = LCD_RGB_DATA_ENDIAN_LITTLE;
+static bsp_display_color_format_t   display_color_format = BSP_DISPLAY_COLOR_FORMAT_16_565RGB;
+static bsp_display_endianness_t     display_data_endian  = BSP_DISPLAY_ENDIAN_LITTLE;
 static pax_buf_t                    fb                   = {0};
 static QueueHandle_t                input_event_queue    = NULL;
 
@@ -458,7 +459,7 @@ void app_main(void) {
     // Initialize BSP
     const bsp_configuration_t bsp_configuration = {
         .display = {
-            .requested_color_format = LCD_COLOR_PIXEL_FORMAT_RGB888,
+            .requested_color_format = BSP_DISPLAY_COLOR_FORMAT_24_888RGB,
             .num_fbs                = 1,
         },
     };
@@ -476,8 +477,8 @@ void app_main(void) {
 
     pax_buf_type_t format = PAX_BUF_24_888RGB;
     switch (display_color_format) {
-        case LCD_COLOR_PIXEL_FORMAT_RGB565: format = PAX_BUF_16_565RGB; break;
-        case LCD_COLOR_PIXEL_FORMAT_RGB888: format = PAX_BUF_24_888RGB; break;
+        case BSP_DISPLAY_COLOR_FORMAT_16_565RGB: format = PAX_BUF_16_565RGB; break;
+        case BSP_DISPLAY_COLOR_FORMAT_24_888RGB: format = PAX_BUF_24_888RGB; break;
         default: break;
     }
 
@@ -491,10 +492,11 @@ void app_main(void) {
     }
 
     pax_buf_init(&fb, NULL, display_h_res, display_v_res, format);
-    pax_buf_reversed(&fb, display_data_endian == LCD_RGB_DATA_ENDIAN_BIG);
+    pax_buf_reversed(&fb, display_data_endian == BSP_DISPLAY_ENDIAN_BIG);
     pax_buf_set_orientation(&fb, orientation);
 
-    ESP_ERROR_CHECK(bsp_input_get_queue(&input_event_queue));
+    // Input queue — graceloader merges native + USB keyboard
+    ESP_ERROR_CHECK(gl_input_get_queue(&input_event_queue));
 
     // LEDs off
     for (int i = 0; i < 6; i++) bsp_led_set_pixel(i, 0x000000);
