@@ -583,9 +583,9 @@ void app_main(void) {
         // Keyboard events only fire once on press — no repeats — so we
         // poll the key directly to know when it's released.
         bool space_held = false;
-        bsp_input_read_navigation_key(BSP_INPUT_NAVIGATION_KEY_SPACE_L, &space_held);
-        if (!space_held) bsp_input_read_navigation_key(BSP_INPUT_NAVIGATION_KEY_SPACE_M, &space_held);
-        if (!space_held) bsp_input_read_navigation_key(BSP_INPUT_NAVIGATION_KEY_SPACE_R, &space_held);
+        gl_input_read_navigation_key(BSP_INPUT_NAVIGATION_KEY_SPACE_L, &space_held);
+        if (!space_held) gl_input_read_navigation_key(BSP_INPUT_NAVIGATION_KEY_SPACE_M, &space_held);
+        if (!space_held) gl_input_read_navigation_key(BSP_INPUT_NAVIGATION_KEY_SPACE_R, &space_held);
         if (!space_held) {
             g_state[0].turboAction = 0;
             g_state[1].turboAction = 0;
