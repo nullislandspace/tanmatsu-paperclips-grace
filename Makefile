@@ -4,7 +4,7 @@ BADGELINKPORT ?= $(PORT)
 SHELL := /usr/bin/env bash
 
 # App installation settings
-APP_SLUG_NAME ?= at.cavac.paperclips-grace
+APP_SLUG_NAME ?= at.cavac.paperclips
 APP_INSTALL_BASE_PATH ?= /int/apps/
 APP_INSTALL_PATH = $(APP_INSTALL_BASE_PATH)$(APP_SLUG_NAME)
 
